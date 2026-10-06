@@ -1,0 +1,61 @@
+{
+  "name": "esp32-studio",
+  "productName": "ESP32 Studio",
+  "version": "1.0.0",
+  "description": "IDE para Windows para escribir, compilar, simular y cargar código en ESP32 (Espressif)",
+  "main": "src/main/main.js",
+  "author": "MAG Biomédica",
+  "license": "UNLICENSED",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --dev",
+    "check": "node scripts/check.js",
+    "dist": "electron-builder --win nsis portable",
+    "dist:dir": "electron-builder --win --dir"
+  },
+  "dependencies": {
+    "monaco-editor": "^0.52.2"
+  },
+  "devDependencies": {
+    "electron": "^33.2.1",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "com.magbiomedica.esp32studio",
+    "productName": "ESP32 Studio",
+    "copyright": "© MAG Biomédica",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "src/**/*",
+      "assets/**/*",
+      "templates/**/*",
+      "branding.json",
+      "build/icon.png",
+      "package.json",
+      "node_modules/monaco-editor/min/**/*"
+    ],
+    "win": {
+      "icon": "build/icon.ico",
+      "target": [
+        "nsis",
+        "portable"
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "ESP32 Studio",
+      "installerIcon": "build/icon.ico",
+      "uninstallerIcon": "build/icon.ico"
+    },
+    "portable": {
+      "artifactName": "ESP32-Studio-Portable-${version}.exe"
+    }
+  }
+}

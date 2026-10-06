@@ -1,0 +1,7 @@
+{
+  "name": "Pulsador e interrupción",
+  "description": "Alterna un LED con un pulsador usando interrupciones y antirrebote.",
+  "category": "Básico",
+  "order": 2,
+  "simulate": true
+}

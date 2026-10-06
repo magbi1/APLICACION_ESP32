@@ -1,0 +1,8 @@
+{
+  "appName": "ESP32 Studio",
+  "company": "MAG Biomédica",
+  "tagline": "Entorno de desarrollo integrado para ESP32",
+  "logo": "assets/logos/logo.svg",
+  "logoSecondary": "assets/logos/logo-secondary.svg",
+  "accentColor": "#00b4d8"
+}

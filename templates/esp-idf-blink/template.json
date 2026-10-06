@@ -1,0 +1,7 @@
+{
+  "name": "ESP-IDF Blink",
+  "description": "Proyecto nativo ESP-IDF (C) con FreeRTOS y driver GPIO.",
+  "category": "ESP-IDF",
+  "order": 20,
+  "simulate": false
+}

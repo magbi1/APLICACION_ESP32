@@ -1,0 +1,7 @@
+{
+  "name": "Tareas FreeRTOS",
+  "description": "Dos tareas en núcleos distintos comunicadas con una cola.",
+  "category": "RTOS",
+  "order": 10,
+  "simulate": true
+}

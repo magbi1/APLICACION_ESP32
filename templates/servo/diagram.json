@@ -1,0 +1,54 @@
+{
+  "version": 1,
+  "author": "ESP32 Studio",
+  "editor": "esp32-studio",
+  "parts": [
+    {
+      "type": "board-esp32-devkit-c-v4",
+      "id": "esp",
+      "top": 0,
+      "left": 0,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-servo",
+      "id": "servo1",
+      "top": -120,
+      "left": 170,
+      "attrs": {}
+    }
+  ],
+  "connections": [
+    [
+      "esp:TX",
+      "$serialMonitor:RX",
+      "",
+      []
+    ],
+    [
+      "esp:RX",
+      "$serialMonitor:TX",
+      "",
+      []
+    ],
+    [
+      "servo1:PWM",
+      "esp:18",
+      "orange",
+      []
+    ],
+    [
+      "servo1:V+",
+      "esp:5V",
+      "red",
+      []
+    ],
+    [
+      "servo1:GND",
+      "esp:GND.1",
+      "black",
+      []
+    ]
+  ],
+  "dependencies": {}
+}

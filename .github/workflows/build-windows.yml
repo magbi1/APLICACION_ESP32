@@ -1,0 +1,54 @@
+name: Build ESP32 Studio (Windows)
+
+on:
+  push:
+    branches: ['**']
+    tags: ['v*']
+  workflow_dispatch:
+
+jobs:
+  templates:
+    name: Compilar plantillas Arduino (ESP32)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: arduino/setup-arduino-cli@v2
+      - name: Instalar núcleo ESP32
+        run: |
+          arduino-cli core update-index --additional-urls https://espressif.github.io/arduino-esp32/package_esp32_index.json
+          arduino-cli core install esp32:esp32 --additional-urls https://espressif.github.io/arduino-esp32/package_esp32_index.json
+          arduino-cli lib install "DHT sensor library for ESPx" "Adafruit SSD1306" "Adafruit GFX Library"
+      - name: Compilar cada plantilla
+        run: |
+          set -e
+          for d in templates/*/; do
+            name=$(basename "$d")
+            [ -f "$d/sketch.ino" ] || continue
+            mkdir -p "/tmp/sk/$name"
+            cp -r "$d"/* "/tmp/sk/$name/"
+            mv "/tmp/sk/$name/sketch.ino" "/tmp/sk/$name/$name.ino"
+            echo "::group::$name"
+            arduino-cli compile --fqbn esp32:esp32:esp32 "/tmp/sk/$name"
+            echo "::endgroup::"
+          done
+
+  windows:
+    name: Instalador de Windows
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run check
+      - name: Empaquetar (NSIS + portable)
+        run: npx electron-builder --win nsis portable --publish never
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: false
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ESP32-Studio-Windows
+          path: |
+            dist/*.exe

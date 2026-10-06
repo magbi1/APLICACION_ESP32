@@ -1,0 +1,7 @@
+{
+  "name": "Blink",
+  "description": "Parpadeo del LED en GPIO2 con mensajes por serie.",
+  "category": "Básico",
+  "order": 1,
+  "simulate": true
+}

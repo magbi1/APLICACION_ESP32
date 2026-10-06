@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "author": "ESP32 Studio",
+  "editor": "esp32-studio",
+  "parts": [
+    {
+      "type": "board-esp32-devkit-c-v4",
+      "id": "esp",
+      "top": 0,
+      "left": 0,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-dht22",
+      "id": "dht1",
+      "top": -110,
+      "left": 170,
+      "attrs": {
+        "temperature": "24.5",
+        "humidity": "55"
+      }
+    }
+  ],
+  "connections": [
+    [
+      "esp:TX",
+      "$serialMonitor:RX",
+      "",
+      []
+    ],
+    [
+      "esp:RX",
+      "$serialMonitor:TX",
+      "",
+      []
+    ],
+    [
+      "dht1:SDA",
+      "esp:15",
+      "green",
+      []
+    ],
+    [
+      "dht1:VCC",
+      "esp:3V3",
+      "red",
+      []
+    ],
+    [
+      "dht1:GND",
+      "esp:GND.1",
+      "black",
+      []
+    ]
+  ],
+  "dependencies": {}
+}

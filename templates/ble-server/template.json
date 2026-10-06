@@ -1,0 +1,7 @@
+{
+  "name": "Servidor BLE",
+  "description": "Expone una característica BLE de lectura/escritura.",
+  "category": "Bluetooth",
+  "order": 11,
+  "simulate": false
+}

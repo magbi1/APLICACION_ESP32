@@ -1,0 +1,7 @@
+{
+  "name": "Deep Sleep",
+  "description": "Bajo consumo: despierta por temporizador y guarda un contador en RTC.",
+  "category": "Energía",
+  "order": 9,
+  "simulate": true
+}

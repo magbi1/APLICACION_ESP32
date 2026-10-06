@@ -1,0 +1,7 @@
+{
+  "name": "PlatformIO Blink",
+  "description": "Proyecto PlatformIO (framework Arduino) con platformio.ini.",
+  "category": "PlatformIO",
+  "order": 21,
+  "simulate": false
+}

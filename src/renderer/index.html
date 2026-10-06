@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self' file: data: blob:; script-src 'self' file: 'unsafe-eval' blob:; style-src 'self' file: 'unsafe-inline'; img-src 'self' file: data: blob: https:; font-src 'self' file: data:; worker-src 'self' blob: file:; connect-src 'self' file: https:" />
+  <title>ESP32 Studio</title>
+  <link rel="stylesheet" href="css/app.css" />
+</head>
+<body>
+  <!-- Barra de título personalizada -->
+  <header class="titlebar">
+    <div class="tb-brand">
+      <img id="brandLogo" class="tb-logo" alt="logo" />
+      <span id="brandName" class="tb-name">ESP32 Studio</span>
+      <span class="tb-sep"></span>
+      <span id="tbProject" class="tb-project">Sin proyecto</span>
+    </div>
+    <div class="tb-actions no-drag">
+      <div class="tb-select">
+        <span class="tb-label">Placa</span>
+        <select id="boardSelect" title="Placa (FQBN)"></select>
+      </div>
+      <div class="tb-select">
+        <span class="tb-label">Puerto</span>
+        <select id="portSelect" title="Puerto serie"></select>
+        <button class="icon-btn" id="refreshPorts" title="Actualizar puertos" data-icon="refresh"></button>
+      </div>
+      <button class="tb-btn verify" id="btnVerify" title="Verificar / Compilar (Ctrl+R)"><i data-icon="check"></i>Compilar</button>
+      <button class="tb-btn upload" id="btnUpload" title="Cargar a la placa (Ctrl+U)"><i data-icon="upload"></i>Cargar</button>
+      <button class="tb-btn simulate" id="btnSimulate" title="Simular (F5)"><i data-icon="play"></i>Simular</button>
+    </div>
+    <div class="win-controls no-drag">
+      <button data-win="minimize" title="Minimizar" data-icon="minus"></button>
+      <button data-win="maximize" title="Maximizar" data-icon="square"></button>
+      <button data-win="close" class="close" title="Cerrar" data-icon="x"></button>
+    </div>
+  </header>
+
+  <div class="shell">
+    <!-- Barra lateral -->
+    <nav class="sidebar">
+      <button class="nav-item active" data-view="dashboard" title="Dashboard"><i data-icon="home"></i><span>Inicio</span></button>
+      <button class="nav-item" data-view="editor" title="Editor"><i data-icon="code"></i><span>Editor</span></button>
+      <button class="nav-item" data-view="simulator" title="Simulador"><i data-icon="cpu"></i><span>Simulador</span></button>
+      <button class="nav-item" data-view="monitor" title="Monitor serie y plotter"><i data-icon="activity"></i><span>Monitor</span></button>
+      <button class="nav-item" data-view="flash" title="Herramientas de flash"><i data-icon="zap"></i><span>Flash</span></button>
+      <button class="nav-item" data-view="libraries" title="Librerías"><i data-icon="book"></i><span>Librerías</span></button>
+      <button class="nav-item" data-view="pinout" title="Pinout ESP32"><i data-icon="grid"></i><span>Pinout</span></button>
+      <div class="nav-spacer"></div>
+      <button class="nav-item" data-view="settings" title="Herramientas y ajustes"><i data-icon="settings"></i><span>Ajustes</span></button>
+      <img id="brandLogo2" class="nav-logo" alt="logo secundario" />
+    </nav>
+
+    <main class="views">
+      <!-- ============ DASHBOARD ============ -->
+      <section class="view active" id="view-dashboard">
+        <div class="hero">
+          <div class="hero-text">
+            <img id="heroLogo" class="hero-logo" alt="logo" />
+            <div>
+              <h1 id="heroTitle">ESP32 Studio</h1>
+              <p id="heroTagline">Entorno de desarrollo integrado para ESP32</p>
+              <div class="hero-actions">
+                <button class="btn primary" id="dashNew"><i data-icon="plus"></i>Nuevo proyecto</button>
+                <button class="btn" id="dashOpen"><i data-icon="folder"></i>Abrir proyecto</button>
+                <button class="btn ghost" id="dashGoTools"><i data-icon="settings"></i>Herramientas</button>
+              </div>
+            </div>
+          </div>
+          <div class="hero-chip">
+            <svg viewBox="0 0 200 200" class="chip-art" aria-hidden="true">
+              <defs>
+                <linearGradient id="chipG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="var(--accent)"/><stop offset="1" stop-color="var(--accent2)"/></linearGradient>
+              </defs>
+              <g stroke="url(#chipG)" stroke-width="3" fill="none" opacity=".9">
+                <rect x="50" y="50" width="100" height="100" rx="12"/>
+                <rect x="68" y="68" width="64" height="64" rx="6" opacity=".6"/>
+                <path d="M65 50V30M85 50V30M100 50V22M115 50V30M135 50V30M65 150v20M85 150v20M100 150v28M115 150v20M135 150v20M50 65H30M50 85H30M50 100H22M50 115H30M50 135H30M150 65h20M150 85h20M150 100h28M150 115h20M150 135h20"/>
+              </g>
+              <text x="100" y="106" text-anchor="middle" class="chip-text">ESP32</text>
+            </svg>
+          </div>
+        </div>
+
+        <div class="kpis">
+          <div class="kpi"><div class="kpi-icon" data-icon="folder"></div><div><div class="kpi-label">Proyecto activo</div><div class="kpi-value" id="kpiProject">—</div></div></div>
+          <div class="kpi"><div class="kpi-icon" data-icon="cpu"></div><div><div class="kpi-label">Placa</div><div class="kpi-value" id="kpiBoard">—</div></div></div>
+          <div class="kpi"><div class="kpi-icon" data-icon="usb"></div><div><div class="kpi-label">Dispositivos</div><div class="kpi-value" id="kpiPorts">0</div></div></div>
+          <div class="kpi"><div class="kpi-icon" data-icon="clock"></div><div><div class="kpi-label">Última compilación</div><div class="kpi-value" id="kpiBuild">—</div></div></div>
+        </div>
+
+        <div class="dash-grid">
+          <div class="card span2">
+            <div class="card-head"><h3><i data-icon="bar"></i>Uso de memoria (última compilación)</h3><span class="muted" id="memProject"></span></div>
+            <div class="gauges">
+              <div class="gauge" id="gaugeFlash"><svg viewBox="0 0 120 120"><circle class="g-bg" cx="60" cy="60" r="50"/><circle class="g-fg" cx="60" cy="60" r="50"/></svg><div class="g-center"><b>0%</b><span>Flash</span></div><div class="g-detail">—</div></div>
+              <div class="gauge" id="gaugeRam"><svg viewBox="0 0 120 120"><circle class="g-bg" cx="60" cy="60" r="50"/><circle class="g-fg" cx="60" cy="60" r="50"/></svg><div class="g-center"><b>0%</b><span>RAM</span></div><div class="g-detail">—</div></div>
+              <div class="build-summary" id="buildSummary"><p class="muted">Compila un proyecto para ver estadísticas de memoria, tiempo de compilación y diagnósticos.</p></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3><i data-icon="usb"></i>Dispositivos conectados</h3><button class="icon-btn" id="dashRefreshPorts" data-icon="refresh" title="Actualizar"></button></div>
+            <ul class="list" id="dashPorts"><li class="muted">Buscando…</li></ul>
+          </div>
+          <div class="card span2">
+            <div class="card-head"><h3><i data-icon="folder"></i>Proyectos</h3><button class="link" id="dashWorkspace">Abrir carpeta de trabajo</button></div>
+            <div class="projects" id="dashProjects"></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3><i data-icon="tool"></i>Cadena de herramientas</h3><button class="icon-btn" id="dashRefreshTools" data-icon="refresh" title="Actualizar"></button></div>
+            <ul class="tools-list" id="dashTools"></ul>
+          </div>
+          <div class="card span3">
+            <div class="card-head"><h3><i data-icon="layers"></i>Plantillas y ejemplos</h3></div>
+            <div class="templates" id="dashTemplates"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ EDITOR ============ -->
+      <section class="view" id="view-editor">
+        <div class="editor-layout">
+          <aside class="explorer">
+            <div class="explorer-head">
+              <span>EXPLORADOR</span>
+              <div>
+                <button class="icon-btn sm" id="exNewFile" data-icon="filePlus" title="Nuevo archivo"></button>
+                <button class="icon-btn sm" id="exNewFolder" data-icon="folderPlus" title="Nueva carpeta"></button>
+                <button class="icon-btn sm" id="exRefresh" data-icon="refresh" title="Actualizar"></button>
+                <button class="icon-btn sm" id="exTerminal" data-icon="terminal" title="Abrir terminal"></button>
+              </div>
+            </div>
+            <div class="explorer-project" id="exProject">Ningún proyecto abierto</div>
+            <div class="tree" id="fileTree"></div>
+          </aside>
+          <div class="editor-main">
+            <div class="tabs" id="tabs"></div>
+            <div class="editor-host" id="editorHost">
+              <div class="empty-editor" id="emptyEditor">
+                <img id="emptyLogo" alt="" />
+                <h2>Abre o crea un proyecto</h2>
+                <p class="muted">Ctrl+N nuevo · Ctrl+O abrir · Ctrl+S guardar · Ctrl+R compilar · Ctrl+U cargar · F5 simular</p>
+              </div>
+            </div>
+            <div class="splitter" id="splitter"></div>
+            <div class="bottom-panel" id="bottomPanel">
+              <div class="panel-tabs">
+                <button class="ptab active" data-panel="output">Salida</button>
+                <button class="ptab" data-panel="problems">Problemas <span class="badge" id="problemCount">0</span></button>
+                <button class="ptab" data-panel="serial">Monitor serie</button>
+                <div class="panel-spacer"></div>
+                <div class="build-progress" id="buildProgress"><div></div></div>
+                <button class="icon-btn sm" id="cancelBuild" data-icon="stop" title="Cancelar"></button>
+                <button class="icon-btn sm" id="clearOutput" data-icon="trash" title="Limpiar"></button>
+              </div>
+              <div class="panel active" id="panel-output"><pre class="console" id="buildOutput"></pre></div>
+              <div class="panel" id="panel-problems"><ul class="problems" id="problems"></ul></div>
+              <div class="panel" id="panel-serial"><pre class="console" id="miniSerial"></pre></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ SIMULADOR ============ -->
+      <section class="view" id="view-simulator">
+        <div class="view-head">
+          <div><h2><i data-icon="cpu"></i>Simulador</h2><p class="muted">Simula tu firmware sin hardware con Wokwi (circuito y periféricos) o QEMU de Espressif.</p></div>
+          <div class="head-actions">
+            <div class="segmented" id="simEngine">
+              <button data-engine="wokwi" class="active">Wokwi</button>
+              <button data-engine="qemu">QEMU</button>
+            </div>
+            <button class="btn primary" id="simStart"><i data-icon="play"></i>Compilar y simular</button>
+            <button class="btn danger" id="simStop" disabled><i data-icon="stop"></i>Detener</button>
+          </div>
+        </div>
+        <div class="sim-grid">
+          <div class="card sim-circuit">
+            <div class="card-head"><h3><i data-icon="layers"></i>Diseñador de circuito <span class="muted">(diagram.json)</span></h3>
+              <div>
+                <button class="btn sm" id="simAddPart"><i data-icon="plus"></i>Componente</button>
+                <button class="btn sm" id="simSaveDiagram"><i data-icon="save"></i>Guardar</button>
+                <button class="btn sm ghost" id="simWokwiWeb"><i data-icon="external"></i>wokwi.com</button>
+              </div>
+            </div>
+            <div class="circuit" id="circuit"></div>
+            <div class="parts-table" id="partsTable"></div>
+          </div>
+          <div class="card sim-console">
+            <div class="card-head"><h3><i data-icon="terminal"></i>Consola de simulación</h3><span class="sim-state" id="simState">Detenido</span></div>
+            <pre class="console tall" id="simOutput"></pre>
+            <div class="console-input">
+              <input id="simInput" placeholder="Enviar al puerto serie simulado…" />
+              <button class="btn sm" id="simSend">Enviar</button>
+            </div>
+            <div class="sim-options">
+              <label>Tiempo límite (s) <input type="number" id="simTimeout" value="600" min="0" /></label>
+              <label>Esperar texto <input id="simExpect" placeholder="opcional (prueba automática)" /></label>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ MONITOR ============ -->
+      <section class="view" id="view-monitor">
+        <div class="view-head">
+          <div><h2><i data-icon="activity"></i>Monitor serie y plotter</h2><p class="muted">Lee y envía datos por UART. El plotter grafica valores numéricos separados por coma, espacio o "etiqueta:valor".</p></div>
+          <div class="head-actions">
+            <select id="monBaud">
+              <option>9600</option><option>19200</option><option>38400</option><option>57600</option><option selected>115200</option><option>230400</option><option>460800</option><option>921600</option>
+            </select>
+            <label class="check"><input type="checkbox" id="monTimestamps" />Marcas de tiempo</label>
+            <label class="check"><input type="checkbox" id="monAutoscroll" checked />Autodesplazar</label>
+            <button class="btn primary" id="monConnect"><i data-icon="link"></i>Conectar</button>
+            <button class="btn" id="monClear"><i data-icon="trash"></i>Limpiar</button>
+            <button class="btn" id="monSave"><i data-icon="save"></i>Exportar</button>
+          </div>
+        </div>
+        <div class="monitor-grid">
+          <div class="card">
+            <pre class="console tall" id="monOutput"></pre>
+            <div class="console-input">
+              <input id="monInput" placeholder="Escribe y presiona Enter…" />
+              <select id="monEol"><option value="\n">LF</option><option value="\r\n" selected>CR+LF</option><option value="\r">CR</option><option value="">Sin fin de línea</option></select>
+              <button class="btn sm" id="monSend">Enviar</button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3><i data-icon="bar"></i>Plotter</h3><div><button class="btn sm" id="plotPause">Pausar</button><button class="btn sm" id="plotClear">Limpiar</button></div></div>
+            <canvas id="plotter"></canvas>
+            <div class="legend" id="plotLegend"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ FLASH ============ -->
+      <section class="view" id="view-flash">
+        <div class="view-head"><div><h2><i data-icon="zap"></i>Herramientas de flash (esptool)</h2><p class="muted">Información del chip, borrado, respaldo y escritura de binarios en cualquier dirección.</p></div></div>
+        <div class="flash-grid">
+          <div class="card">
+            <div class="card-head"><h3>Chip</h3></div>
+            <label class="field">Chip<select id="flChip"><option value="auto">Detección automática</option><option>esp32</option><option>esp32s2</option><option>esp32s3</option><option>esp32c3</option><option>esp32c6</option><option>esp32h2</option></select></label>
+            <label class="field">Velocidad<select id="flBaud"><option>115200</option><option>460800</option><option selected>921600</option><option>1500000</option></select></label>
+            <div class="btn-row">
+              <button class="btn" data-esptool="chip_id"><i data-icon="cpu"></i>Info del chip</button>
+              <button class="btn" data-esptool="flash_id"><i data-icon="database"></i>Info de flash</button>
+              <button class="btn" data-esptool="read_mac"><i data-icon="wifi"></i>Leer MAC</button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3>Escribir binario</h3></div>
+            <label class="field">Archivo .bin<div class="input-btn"><input id="flFile" placeholder="Selecciona un .bin" /><button class="btn sm" id="flPick">…</button></div></label>
+            <label class="field">Dirección<input id="flAddr" value="0x10000" /></label>
+            <div class="btn-row">
+              <button class="btn primary" data-esptool="write_flash"><i data-icon="upload"></i>Escribir</button>
+              <button class="btn" data-esptool="read_flash"><i data-icon="download"></i>Respaldar flash (4 MB)</button>
+              <button class="btn danger" data-esptool="erase_flash"><i data-icon="trash"></i>Borrar flash</button>
+            </div>
+          </div>
+          <div class="card span2">
+            <div class="card-head"><h3><i data-icon="terminal"></i>Registro</h3></div>
+            <pre class="console" id="flashOutput"></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ LIBRERÍAS ============ -->
+      <section class="view" id="view-libraries">
+        <div class="view-head">
+          <div><h2><i data-icon="book"></i>Gestor de librerías</h2><p class="muted">Busca e instala librerías del índice de Arduino.</p></div>
+          <div class="head-actions"><input id="libQuery" placeholder="Buscar: DHT, PubSubClient, Adafruit SSD1306…" /><button class="btn primary" id="libSearch"><i data-icon="search"></i>Buscar</button><button class="btn" id="libInstalled">Instaladas</button></div>
+        </div>
+        <div class="lib-list" id="libList"></div>
+      </section>
+
+      <!-- ============ PINOUT ============ -->
+      <section class="view" id="view-pinout">
+        <div class="view-head">
+          <div><h2><i data-icon="grid"></i>Referencia de pines</h2><p class="muted">Funciones, restricciones y pines de arranque (strapping) por chip.</p></div>
+          <div class="head-actions"><select id="pinChip"><option value="esp32">ESP32 (DevKitC)</option><option value="esp32s3">ESP32-S3</option><option value="esp32c3">ESP32-C3</option></select><input id="pinFilter" placeholder="Filtrar: ADC, touch, PWM…" /></div>
+        </div>
+        <div class="pinout" id="pinout"></div>
+      </section>
+
+      <!-- ============ AJUSTES ============ -->
+      <section class="view" id="view-settings">
+        <div class="view-head"><div><h2><i data-icon="settings"></i>Herramientas y ajustes</h2><p class="muted">Instala la cadena de herramientas y personaliza el entorno con tu marca.</p></div></div>
+        <div class="settings-grid">
+          <div class="card span2">
+            <div class="card-head"><h3><i data-icon="tool"></i>Cadena de herramientas</h3><button class="btn sm" id="setRefreshTools"><i data-icon="refresh"></i>Comprobar</button></div>
+            <div class="tool-cards" id="toolCards"></div>
+            <pre class="console" id="toolsOutput"></pre>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3><i data-icon="image"></i>Marca y logos</h3></div>
+            <div class="brand-preview">
+              <div class="brand-slot"><img id="setLogo" alt="" /><button class="btn sm" id="pickLogo">Logo principal</button></div>
+              <div class="brand-slot"><img id="setLogo2" alt="" /><button class="btn sm" id="pickLogo2">Logo secundario</button></div>
+            </div>
+            <label class="field">Nombre de la aplicación<input id="setAppName" /></label>
+            <label class="field">Empresa / autor<input id="setCompany" /></label>
+            <div class="btn-row"><button class="btn primary" id="saveBrand"><i data-icon="save"></i>Guardar marca</button><button class="btn ghost" id="resetBrand">Restablecer</button></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3><i data-icon="sliders"></i>Preferencias</h3></div>
+            <label class="field">Carpeta de trabajo<div class="input-btn"><input id="setWorkspace" /><button class="btn sm" id="pickWorkspace">…</button></div></label>
+            <label class="field">Velocidad de carga<select id="setUploadSpeed"><option>115200</option><option>460800</option><option>921600</option><option>1500000</option></select></label>
+            <label class="field">Tamaño de fuente del editor<input type="number" id="setFontSize" min="10" max="28" /></label>
+            <label class="field">Token de Wokwi CLI <a href="#" data-url="https://wokwi.com/dashboard/ci">(obtener)</a><input id="setWokwiToken" type="password" /></label>
+            <label class="check"><input type="checkbox" id="setAutoSave" />Guardar automáticamente antes de compilar</label>
+            <label class="check"><input type="checkbox" id="setVerbose" />Salida detallada de compilación</label>
+            <div class="btn-row"><button class="btn primary" id="savePrefs"><i data-icon="save"></i>Guardar</button></div>
+          </div>
+          <div class="card span2">
+            <div class="card-head"><h3><i data-icon="folder"></i>Rutas personalizadas <span class="muted">(opcional: vacío = detección automática)</span></h3></div>
+            <div class="paths-grid">
+              <label class="field">arduino-cli<input id="pathArduino" /></label>
+              <label class="field">wokwi-cli<input id="pathWokwi" /></label>
+              <label class="field">esptool<input id="pathEsptool" /></label>
+              <label class="field">QEMU (exe o carpeta)<input id="pathQemu" /></label>
+              <label class="field">PlatformIO (pio)<input id="pathPio" /></label>
+              <label class="field">ESP-IDF (IDF_PATH)<input id="pathIdf" /></label>
+            </div>
+            <div class="btn-row"><button class="btn primary" id="savePaths"><i data-icon="save"></i>Guardar rutas</button></div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <footer class="statusbar">
+    <span id="sbStatus"><i data-icon="circle"></i>Listo</span>
+    <span class="sb-spacer"></span>
+    <span id="sbCursor"></span>
+    <span id="sbType"></span>
+    <span id="sbBoard"></span>
+    <span id="sbPort"></span>
+    <span id="sbCompany"></span>
+  </footer>
+
+  <!-- Modal genérico -->
+  <div class="modal-backdrop" id="modal">
+    <div class="modal">
+      <h3 id="modalTitle"></h3>
+      <div id="modalBody"></div>
+      <div class="modal-actions"><button class="btn ghost" id="modalCancel">Cancelar</button><button class="btn primary" id="modalOk">Aceptar</button></div>
+    </div>
+  </div>
+  <div class="toasts" id="toasts"></div>
+
+  <script src="js/icons.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/editor.js"></script>
+  <script src="js/dashboard.js"></script>
+  <script src="js/simulator.js"></script>
+  <script src="js/monitor.js"></script>
+  <script src="js/tools.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

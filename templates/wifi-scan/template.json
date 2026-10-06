@@ -1,0 +1,7 @@
+{
+  "name": "Escáner Wi‑Fi",
+  "description": "Lista las redes cercanas con RSSI y seguridad.",
+  "category": "Conectividad",
+  "order": 7,
+  "simulate": true
+}

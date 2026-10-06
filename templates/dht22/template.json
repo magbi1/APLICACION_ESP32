@@ -1,0 +1,10 @@
+{
+  "name": "DHT22 temperatura y humedad",
+  "description": "Lee un DHT22 y envía los datos al plotter.",
+  "category": "Sensores",
+  "order": 5,
+  "libraries": [
+    "DHT sensor library for ESPx"
+  ],
+  "simulate": true
+}

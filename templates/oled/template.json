@@ -1,0 +1,11 @@
+{
+  "name": "Pantalla OLED SSD1306",
+  "description": "Texto y gráficos en una OLED I2C 128x64.",
+  "category": "Pantallas",
+  "order": 6,
+  "libraries": [
+    "Adafruit SSD1306",
+    "Adafruit GFX Library"
+  ],
+  "simulate": true
+}

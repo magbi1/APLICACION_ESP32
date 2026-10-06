@@ -1,0 +1,7 @@
+{
+  "name": "PWM Fade (LEDC)",
+  "description": "Atenuación suave de un LED con el periférico LEDC.",
+  "category": "Básico",
+  "order": 3,
+  "simulate": true
+}

@@ -1,0 +1,7 @@
+{
+  "name": "Servo",
+  "description": "Barrido de un servomotor con PWM a 50 Hz (sin librerías).",
+  "category": "Básico",
+  "order": 12,
+  "simulate": true
+}

@@ -1,0 +1,7 @@
+{
+  "name": "Servidor web + LED",
+  "description": "Página web para controlar un LED. En simulación usa la red Wokwi-GUEST.",
+  "category": "Conectividad",
+  "order": 8,
+  "simulate": true
+}

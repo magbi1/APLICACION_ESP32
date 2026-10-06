@@ -1,0 +1,7 @@
+{
+  "name": "Potenciómetro + Plotter",
+  "description": "Lee el ADC y grafica voltaje y valor crudo en el plotter.",
+  "category": "Sensores",
+  "order": 4,
+  "simulate": true
+}
