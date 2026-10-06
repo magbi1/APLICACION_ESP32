@@ -16,5 +16,11 @@ for (const t of fs.readdirSync(tplDir)) {
   const dia = path.join(tplDir, t, 'diagram.json');
   if (fs.existsSync(dia)) JSON.parse(fs.readFileSync(dia, 'utf8'));
 }
+const exDir = path.join(root, 'ejemplos');
+for (const e of fs.existsSync(exDir) ? fs.readdirSync(exDir) : []) {
+  const dia = path.join(exDir, e, 'diagram.json');
+  if (fs.existsSync(dia)) JSON.parse(fs.readFileSync(dia, 'utf8'));
+  if (!fs.existsSync(path.join(exDir, e, `${e}.ino`))) throw new Error(`Falta ${e}.ino en ejemplos/${e}`);
+}
 JSON.parse(fs.readFileSync(path.join(root, 'branding.json'), 'utf8'));
 console.log('OK: interfaz, plantillas y branding válidos');
