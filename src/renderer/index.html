@@ -47,6 +47,7 @@
       <button class="nav-item" data-view="flash" title="Herramientas de flash"><i data-icon="zap"></i><span>Flash</span></button>
       <button class="nav-item" data-view="libraries" title="Librerías"><i data-icon="book"></i><span>Librerías</span></button>
       <button class="nav-item" data-view="pinout" title="Pinout ESP32"><i data-icon="grid"></i><span>Pinout</span></button>
+      <button class="nav-item" data-view="reference" title="Referencia rápida de código (Ctrl+Shift+R)"><i data-icon="help"></i><span>Referencia</span></button>
       <div class="nav-spacer"></div>
       <button class="nav-item" data-view="settings" title="Herramientas y ajustes"><i data-icon="settings"></i><span>Ajustes</span></button>
       <img id="brandLogo2" class="nav-logo" alt="logo secundario" />
@@ -283,6 +284,16 @@
         <div class="pinout" id="pinout"></div>
       </section>
 
+      <!-- ============ REFERENCIA RÁPIDA ============ -->
+      <section class="view" id="view-reference">
+        <div class="view-head">
+          <div><h2><i data-icon="help"></i>Referencia rápida</h2><p class="muted">Sintaxis de C/C++, Arduino y ESP32 con ejemplos. Pulsa «Insertar» para pegarlo en el cursor del editor; también aparecen al escribir en el editor (Ctrl+Espacio).</p></div>
+          <div class="head-actions"><input id="refFilter" placeholder="Buscar: if, for, while, millis, WiFi…" /><span class="muted" id="refCount"></span></div>
+        </div>
+        <div class="ref-cats" id="refCats"></div>
+        <div class="ref-grid" id="refGrid"></div>
+      </section>
+
       <!-- ============ AJUSTES ============ -->
       <section class="view" id="view-settings">
         <div class="view-head"><div><h2><i data-icon="settings"></i>Herramientas y ajustes</h2><p class="muted">Instala la cadena de herramientas y personaliza el entorno con tu marca.</p></div></div>
@@ -357,6 +368,7 @@
   <script src="js/simulator.js"></script>
   <script src="js/monitor.js"></script>
   <script src="js/tools.js"></script>
+  <script src="js/reference.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>

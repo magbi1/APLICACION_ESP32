@@ -67,10 +67,11 @@ const Editor = (() => {
       provideCompletionItems(model, position) {
         const word = model.getWordUntilPosition(position);
         const range = { startLineNumber: position.lineNumber, endLineNumber: position.lineNumber, startColumn: word.startColumn, endColumn: word.endColumn };
-        const suggestions = SNIPPETS.map(([label, doc, body]) => ({
+        const suggestions = SNIPPETS.map(([label, doc, body, category]) => ({
           label,
           kind: monaco.languages.CompletionItemKind.Snippet,
-          documentation: doc,
+          detail: category,
+          documentation: { value: `${doc}\n\n\`\`\`cpp\n${Reference.plain(body)}\n\`\`\`` },
           insertText: body,
           insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
           range
@@ -302,6 +303,23 @@ const Editor = (() => {
     }
   }
 
+  /** Inserta un fragmento (sintaxis de snippet) en la posición del cursor. */
+  function insertSnippet(body) {
+    if (!active) return false;
+    if (monacoEditor) {
+      monacoEditor.focus();
+      monacoEditor.getContribution('snippetController2').insert(body);
+    } else if (fallback) {
+      const text = Reference.plain(body);
+      const pos = fallback.selectionStart;
+      fallback.setRangeText(text, pos, fallback.selectionEnd, 'end');
+      active.text = fallback.value;
+      markDirty(active, true);
+      fallback.focus();
+    }
+    return true;
+  }
+
   function setFontSize(n) {
     monacoEditor && monacoEditor.updateOptions({ fontSize: n });
   }
@@ -369,5 +387,5 @@ const Editor = (() => {
     $('#exTerminal').onclick = () => State.project && call('shell:openTerminal', State.project.projectDir);
   }
 
-  return { init, open, save, saveAll, closeAll, renderTree, refreshTree, setDiagnostics, setFontSize, bindExplorer, get active() { return active; }, get tabs() { return tabs; } };
+  return { init, open, save, saveAll, closeAll, renderTree, refreshTree, setDiagnostics, setFontSize, insertSnippet, bindExplorer, get active() { return active; }, get tabs() { return tabs; } };
 })();

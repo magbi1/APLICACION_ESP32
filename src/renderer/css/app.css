@@ -403,3 +403,21 @@ select option { background: #0c1528; }
   .tb-select select { max-width: 150px; }
   .hero-chip { display: none; }
 }
+
+/* ---------- Referencia rápida ---------- */
+.ref-cats { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+.ref-cat { display: inline-flex; align-items: center; gap: 6px; padding: 5px 11px; border-radius: 20px; border: 1px solid var(--line2); background: var(--panel); color: var(--muted); cursor: pointer; font-size: 12px; }
+.ref-cat span { font-size: 10.5px; padding: 0 6px; border-radius: 10px; background: #1a2742; color: var(--muted); }
+.ref-cat:hover { color: var(--text); border-color: var(--accent); }
+.ref-cat.active { color: #fff; border-color: transparent; background: linear-gradient(135deg, var(--accent), var(--accent2)); }
+.ref-cat.active span { background: rgba(255, 255, 255, .2); color: #fff; }
+.ref-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 12px; }
+.ref-card { display: flex; flex-direction: column; gap: 8px; padding: 14px; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; min-width: 0; }
+.ref-card:hover { border-color: var(--line2); }
+.ref-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.ref-head b { font-family: var(--mono); font-size: 13.5px; color: #8fe6ff; }
+.ref-head .tag { margin: 0; white-space: nowrap; }
+.ref-card p { margin: 0; color: var(--muted); font-size: 12.5px; }
+.ref-code { margin: 0; flex: 1; padding: 10px 12px; border-radius: 8px; background: #070d19; border: 1px solid var(--line); font: 12.5px/1.5 var(--mono); color: #cfe0ff; white-space: pre; overflow-x: auto; }
+.ref-actions { display: flex; gap: 6px; }
+#refFilter { width: 300px; }

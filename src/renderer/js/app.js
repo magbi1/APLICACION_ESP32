@@ -228,7 +228,10 @@ const App = (() => {
     // Atajos de teclado estilo Arduino IDE
     document.addEventListener('keydown', (e) => {
       const ctrl = e.ctrlKey || e.metaKey;
-      if (ctrl && e.key.toLowerCase() === 'r') {
+      if (ctrl && e.shiftKey && e.key.toLowerCase() === 'r') {
+        e.preventDefault();
+        showView('reference');
+      } else if (ctrl && e.key.toLowerCase() === 'r') {
         e.preventDefault();
         compile();
       } else if (ctrl && e.key.toLowerCase() === 'u') {
@@ -270,6 +273,7 @@ const App = (() => {
     Simulator.bind();
     Monitor.bind();
     Tools.bind();
+    Reference.bind();
     Dashboard.render();
     Editor.renderTree();
     Editor.init();

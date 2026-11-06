@@ -16,9 +16,10 @@ Entorno de desarrollo integrado (IDE) para **Windows** para escribir, compilar, 
 | **Flash (esptool)** | Info del chip y de la flash, lectura de MAC, borrado completo, escritura de `.bin` en cualquier dirección y respaldo de la flash. |
 | **Librerías** | Búsqueda, instalación y desinstalación desde el índice de Arduino. |
 | **Pinout** | Referencia de GPIO para ESP32, ESP32-S3 y ESP32-C3: ADC, touch, DAC, PWM, buses, pines de arranque (strapping) y pines prohibidos. |
+| **Referencia rápida** | 168 fichas en 18 categorías: estructura, control de flujo (`if`, `else if`, `switch`, `for`, `while`, `do/while`, `break`, `continue`, ternario), variables y tipos (`int`, `float`, arreglos, `struct`, `enum`, punteros, clases), funciones, operadores, matemáticas, E/S, tiempo, puerto serie, cadenas, interrupciones, Wi‑Fi, Bluetooth, FreeRTOS, energía, memoria, buses y ESP-IDF. Buscador, filtro por categoría, botón **Insertar** en el cursor del editor y **Copiar**. Las mismas fichas aparecen en el autocompletado (`Ctrl+Espacio`). |
 | **Ajustes** | Instalación de herramientas con un clic, rutas personalizadas, token de Wokwi, preferencias del editor y **personalización de marca**. |
 
-Atajos (como en Arduino IDE): `Ctrl+R` compilar · `Ctrl+U` cargar · `F5` simular · `Ctrl+S` guardar · `Ctrl+N` nuevo · `Ctrl+O` abrir · `Ctrl+Shift+M` monitor.
+Atajos (como en Arduino IDE): `Ctrl+R` compilar · `Ctrl+U` cargar · `F5` simular · `Ctrl+S` guardar · `Ctrl+N` nuevo · `Ctrl+O` abrir · `Ctrl+Shift+M` monitor · `Ctrl+Shift+R` referencia rápida.
 
 ## Instalación en Windows
 
